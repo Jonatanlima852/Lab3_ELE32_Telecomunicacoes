@@ -132,6 +132,22 @@ def encontrar_N_proximo(valor_alvo: int, dv: int, dc: int) -> int:
         N += 1
     return N
 
+def exportar_grafo_csv(A: np.ndarray, N: int, nome_arquivo: str = "grafo_ldpc.csv"):
+    """
+    Exporta o grafo LDPC para um arquivo CSV.
+    Cada linha representa um v-node e seus c-nodes conectados.
+    
+    Args:
+        A: Matriz de conexões v-node para c-node
+        N: Número de v-nodes
+        nome_arquivo: Nome do arquivo CSV de saída
+    """
+    with open(nome_arquivo, 'w') as f:
+        for i in range(N):
+            # Converte a linha para string e remove os colchetes
+            linha = str(A[i].tolist())[1:-1]
+            f.write(linha + '\n')
+
 def gerar_grafo_ldpc():
     """
     Gera grafos LDPC com taxa aproximada de 4/7 para diferentes valores de N.
@@ -181,7 +197,11 @@ def gerar_grafo_ldpc():
             np.save(nome_arquivo_A, A)
             np.save(nome_arquivo_B, B)
             
+            # Exporta o grafo em formato CSV
+            exportar_grafo_csv(A, N, f"grafo_ldpc_N{N}.csv")
+            
             print(f"Matrizes salvas em: {nome_arquivo_H}, {nome_arquivo_A}, {nome_arquivo_B}")
+            print(f"Grafo exportado em: grafo_ldpc_N{N}.csv")
             
             # Verificações adicionais
             print("\nVerificações:")
@@ -195,7 +215,8 @@ def gerar_grafo_ldpc():
     
     return resultados
 
-# Rodar caso de exemplo para gerar matrizes LDPC
+
+# Geração de matrizes LDPC para teste
 if __name__ == "__main__":
     print("=== Gerando grafos LDPC ===")
     resultados = gerar_grafo_ldpc()
